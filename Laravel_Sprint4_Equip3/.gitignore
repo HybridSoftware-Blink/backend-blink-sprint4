@@ -1,0 +1,70 @@
+### Laravel & PHP ###
+# Environment files
+/.env
+.env.*
+
+# Composer vendor
+/vendor/
+
+# Node dependencies
+/node_modules/
+
+# Public build / hot reload
+/public/hot
+/public/build
+/public/storage
+
+# Storage keys (keep dirs, ignore keys)
+/storage/*.key
+
+# PHPUnit cache
+.phpunit.result.cache
+
+### IDEs & editors ###
+/.idea/
+/.vscode/
+.phpactor.json
+/.phpunit.cache
+/.nova/
+/.fleet/
+/.zed/
+
+### OS generated files ###
+.DS_Store
+Thumbs.db
+
+### Logs / debug / temp ###
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+*.cache
+/.sass-cache
+/.cache
+
+### Build / package managers ###
+/.parcel-cache/
+
+### Misc / secrets ###
+/auth.json
+composer.phar
+
+### Homestead ###
+Homestead.yaml
+Homestead.json
+
+### DB / backups ###
+*.sql
+*.sqlite
+
+### Editor swap / project files ###
+*.swp
+*.swo
+*.sublime-workspace
+*.sublime-project
+
+# Keep storage and bootstrap/cache directories in repo structure but ignore their runtime files
+/storage/framework/cache/data/
+/storage/framework/sessions/
+/storage/framework/views/
+/storage/logs/
