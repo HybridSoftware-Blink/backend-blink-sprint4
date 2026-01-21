@@ -12,8 +12,9 @@ return new class extends Migration {
             $table->string('name', 100);
             $table->string('email', 100)->unique();
             $table->string('password');
-            $table->string('role', 50);
-            $table->string('status', 20)->default('active');
+            $table->string('role', 50)->comment('admin, user, manager');
+            $table->string('phone', 20)->nullable();
+            $table->string('status', 20)->default('active')->comment('active, inactive, suspended');
             $table->timestamps();
         });
     }
@@ -23,7 +24,3 @@ return new class extends Migration {
         Schema::dropIfExists('users');
     }
 };
-
-
-
-

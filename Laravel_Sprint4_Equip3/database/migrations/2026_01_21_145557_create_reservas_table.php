@@ -18,9 +18,12 @@ return new class extends Migration {
                   ->constrained('vehicles', 'vehicle_id')
                   ->onDelete('cascade');
 
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->string('status', 20)->default('active');
+            $table->dateTime('start_date');
+            $table->dateTime('end_date');
+            $table->string('pickup_location', 255)->nullable();
+            $table->string('dropoff_location', 255)->nullable();
+            $table->string('status', 20)->default('pending')->comment('pending, active, completed, cancelled');
+            $table->decimal('total_cost', 10, 2)->nullable();
             $table->timestamps();
         });
     }
