@@ -1,6 +1,8 @@
 ### Laravel & PHP ###
 # Environment files
 /.env
+/.env.backup
+/.env.production
 .env.*
 
 # Composer vendor
@@ -8,6 +10,8 @@
 
 # Node dependencies
 /node_modules/
+npm-debug.log
+yarn-error.log
 
 # Public build / hot reload
 /public/hot
@@ -19,6 +23,7 @@
 
 # PHPUnit cache
 .phpunit.result.cache
+.phpunit.cache
 
 ### IDEs & editors ###
 /.idea/
@@ -28,6 +33,7 @@
 /.nova/
 /.fleet/
 /.zed/
+*.code-workspace
 
 ### OS generated files ###
 .DS_Store
@@ -41,6 +47,7 @@ yarn-error.log*
 *.cache
 /.sass-cache
 /.cache
+/storage/logs/*.log
 
 ### Build / package managers ###
 /.parcel-cache/
@@ -48,6 +55,12 @@ yarn-error.log*
 ### Misc / secrets ###
 /auth.json
 composer.phar
+composer.lock
+
+### Docker ###
+DockerFile
+docker-compose.yml
+/.docker/
 
 ### Homestead ###
 Homestead.yaml
