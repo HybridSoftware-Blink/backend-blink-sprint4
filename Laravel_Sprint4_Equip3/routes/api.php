@@ -2,19 +2,37 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\ReservationController;
 use App\Http\Controllers\Api\TicketController;
 use App\Http\Controllers\Api\GeofenceController;
 
-// Ruta de autenticación
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+// ============================
+// RUTAS DE AUTENTICACIÓN
+// ============================
+Route::get('/ping', function() {
+    return response()->json(['message' => 'API is working']);
+});
+Route::prefix('v1/auth')->group(function () {
+    // Rutas públicas (sin autenticación)
+    Route::post('register', [AuthController::class, 'register']);
+    Route::post('login', [AuthController::class, 'login']);
+    
+    // Rutas protegidas (requieren autenticación)
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('logout', [AuthController::class, 'logout']);
+        Route::post('logout-all', [AuthController::class, 'logoutAll']);
+        Route::get('me', [AuthController::class, 'me']);
+        Route::post('change-password', [AuthController::class, 'changePassword']);
+    });
+});
 
-// Rutas públicas (sin autenticación)
-Route::prefix('v1')->group(function () {
+// ============================
+// RUTAS DE LA API (PROTEGIDAS)
+// ============================
+Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     
     // Users - CRUD completo
     Route::apiResource('users', UserController::class);
@@ -40,9 +58,4 @@ Route::prefix('v1')->group(function () {
     Route::get('geofences/{id}/logs', [GeofenceController::class, 'logs']);
     Route::post('geofences/check-vehicle', [GeofenceController::class, 'checkVehicle']);
 });
-
-// Rutas protegidas (requieren autenticación)
-// Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
-//     // Aquí irán las rutas que requieren autenticación
-// });
 

@@ -81,3 +81,13 @@ Homestead.json
 /storage/framework/sessions/
 /storage/framework/views/
 /storage/logs/
+
+# Ignore API tests and Postman collection
+/API_TESTS.md
+/Blink_API_Postman_Collection.json
+
+# Ignorar documentación y colección de autenticación locales
+AUTH_DOCUMENTATION.md
+Blink_API_Postman_Collection
+get_token.sh
+test_all_routes_joel.sh
