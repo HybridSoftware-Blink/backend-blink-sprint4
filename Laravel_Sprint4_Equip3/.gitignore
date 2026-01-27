@@ -89,5 +89,9 @@ Homestead.json
 # Ignorar documentación y colección de autenticación locales
 AUTH_DOCUMENTATION.md
 Blink_API_Postman_Collection
+Blink_Auth_Postman_Collection.json
+
+# Ignorar colección completa de Postman y scripts locales
+Blink_API_Complete_Collection.json
 get_token.sh
 test_all_routes_joel.sh
