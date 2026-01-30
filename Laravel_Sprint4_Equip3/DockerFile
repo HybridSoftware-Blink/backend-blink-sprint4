@@ -1,0 +1,27 @@
+# Backend Dockerfile amb PHP 8.4
+FROM php:8.4-cli
+
+# Establir directori de treball
+WORKDIR /var/www/html
+
+# Instal·lar dependències necessàries
+RUN apt-get update && apt-get install -y \
+    git zip unzip curl libpng-dev libonig-dev libxml2-dev mariadb-client
+
+# Extensions de PHP necessàries per Laravel
+RUN docker-php-ext-install pdo pdo_mysql mysqli
+
+# Copiar Composer des del contenidor oficial
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Copiar el codi del projecte
+COPY . .
+
+# Instal·lar dependències de PHP amb Composer
+RUN composer install --no-interaction --prefer-dist
+
+# Exposar el port 8000
+EXPOSE 8001
+
+# Comanda per executar Laravel
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
