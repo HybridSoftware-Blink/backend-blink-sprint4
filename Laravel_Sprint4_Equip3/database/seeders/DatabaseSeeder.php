@@ -160,5 +160,8 @@ class DatabaseSeeder extends Seeder
             'radius' => 1000,
             'status' => 'active',
         ]);
+
+        // Seed vehicles practice
+        $this->call(VehiclePracticeSeeder::class);
     }
 }

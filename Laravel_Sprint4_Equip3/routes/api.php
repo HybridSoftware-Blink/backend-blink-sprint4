@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\ReservationController;
 use App\Http\Controllers\Api\TicketController;
 use App\Http\Controllers\Api\GeofenceController;
+use App\Http\Controllers\Api\VehiclePracticeController;
 
 // ============================
 // RUTAS DE AUTENTICACIÓN
@@ -19,7 +20,7 @@ Route::prefix('v1/auth')->group(function () {
     // Rutas públicas (sin autenticación)
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
-    
+
     // Rutas protegidas (requieren autenticación)
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
@@ -42,6 +43,12 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::get('vehicles/{id}/reservations', [VehicleController::class, 'reservations']);
     Route::patch('vehicles/{id}/location', [VehicleController::class, 'updateLocation']);
     
+    // ========================================
+    // VEHICLES PRACTICE - CRUD DE APRENDIZAJE
+    // ========================================
+    Route::apiResource('vehicles-practice', VehiclePracticeController::class);
+    Route::patch('vehicles-practice/{id}/location', [VehiclePracticeController::class, 'updateLocation']);
+    
     // Reservations - CRUD completo
     Route::apiResource('reservations', ReservationController::class);
     Route::get('reservations/user/{userId}', [ReservationController::class, 'byUser']);
@@ -58,4 +65,3 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::get('geofences/{id}/logs', [GeofenceController::class, 'logs']);
     Route::post('geofences/check-vehicle', [GeofenceController::class, 'checkVehicle']);
 });
-
