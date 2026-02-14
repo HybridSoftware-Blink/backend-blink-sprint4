@@ -40,7 +40,9 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     
     // Vehicles - CRUD completo
     Route::apiResource('vehicles', VehicleController::class);
+    Route::get('vehicles/available/search', [VehicleController::class, 'available']); // Abans de {id}
     Route::get('vehicles/{id}/reservations', [VehicleController::class, 'reservations']);
+    Route::get('vehicles/{id}/calendar', [VehicleController::class, 'calendar']);
     Route::patch('vehicles/{id}/location', [VehicleController::class, 'updateLocation']);
     
     // ========================================
@@ -51,7 +53,10 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     
     // Reservations - CRUD completo
     Route::apiResource('reservations', ReservationController::class);
+    Route::get('my-reservations', [ReservationController::class, 'myReservations']); // Reserves usuari autenticat
     Route::get('reservations/user/{userId}', [ReservationController::class, 'byUser']);
+    Route::get('reservations/{id}/qr', [ReservationController::class, 'generateQR']); // Generar QR
+    Route::post('reservations/verify-qr', [ReservationController::class, 'verifyQR']); // Verificar QR
     Route::patch('reservations/{id}/status', [ReservationController::class, 'updateStatus']);
     
     // Tickets - CRUD completo

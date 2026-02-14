@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Vehicle;
+use App\Models\Reservation;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class VehicleController extends Controller
 {
@@ -111,5 +113,80 @@ class VehicleController extends Controller
         ]);
         
         return response()->json($vehicle);
+    }
+
+    /**
+     * Get available vehicles for given dates.
+     */
+    public function available(Request $request)
+    {
+        $validated = $request->validate([
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
+        ]);
+
+        $startDate = $validated['start_date'];
+        $endDate = $validated['end_date'];
+
+        // Obtenir IDs de vehicles amb reserves solapades
+        $reservedVehicleIds = Reservation::whereIn('status', ['pending', 'active'])
+            ->where(function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('start_date', [$startDate, $endDate])
+                    ->orWhereBetween('end_date', [$startDate, $endDate])
+                    ->orWhere(function ($q) use ($startDate, $endDate) {
+                        $q->where('start_date', '<=', $startDate)
+                          ->where('end_date', '>=', $endDate);
+                    });
+            })
+            ->pluck('vehicle_id')
+            ->toArray();
+
+        // Vehicles disponibles
+        $availableVehicles = Vehicle::whereNotIn('vehicle_id', $reservedVehicleIds)
+            ->where('status', 'available')
+            ->get();
+
+        return response()->json([
+            'available_vehicles' => $availableVehicles,
+            'count' => $availableVehicles->count(),
+            'date_range' => [
+                'start' => $startDate,
+                'end' => $endDate
+            ]
+        ]);
+    }
+
+    /**
+     * Get calendar of reservations for a vehicle.
+     */
+    public function calendar(Request $request, string $id)
+    {
+        $vehicle = Vehicle::findOrFail($id);
+        
+        $month = $request->input('month', Carbon::now()->month);
+        $year = $request->input('year', Carbon::now()->year);
+
+        $startOfMonth = Carbon::create($year, $month, 1)->startOfMonth();
+        $endOfMonth = Carbon::create($year, $month, 1)->endOfMonth();
+
+        $reservations = Reservation::where('vehicle_id', $id)
+            ->whereIn('status', ['pending', 'active', 'completed'])
+            ->where(function ($query) use ($startOfMonth, $endOfMonth) {
+                $query->whereBetween('start_date', [$startOfMonth, $endOfMonth])
+                    ->orWhereBetween('end_date', [$startOfMonth, $endOfMonth])
+                    ->orWhere(function ($q) use ($startOfMonth, $endOfMonth) {
+                        $q->where('start_date', '<=', $startOfMonth)
+                          ->where('end_date', '>=', $endOfMonth);
+                    });
+            })
+            ->with('user:user_id,name,email')
+            ->get();
+
+        return response()->json([
+            'vehicle' => $vehicle,
+            'month' => $month,
+            'year' => $year,
+            'reservations' => $reservations
+        ]);
     }
 }
